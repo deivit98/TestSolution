@@ -1,0 +1,12 @@
+1) 
+I would separate logic inside the method into separate privaete methods.
+This way we will refactor the code to follow the first of SOLID principles - Single Responsibility
+
+2)
+I would suggest using StringBuilder over string interpolation.
+This way we would improve performance
+
+3)
+I would suggest wrapping File.CreateText into a using statement
+the method Flush() only clears the pipeline, but does not dispose the object.
+The object already implements IDisposable so it would make sense for us to dispose it and improve performance
