@@ -27,7 +27,7 @@ namespace EmployeeService.Server.Middleware
             }
             else
             {
-                if (!endpoint.DisplayName.Contains(ApiConstants.CreateEmployeeEndpointName))
+                if (!endpoint.DisplayName!.Contains(ApiConstants.CreateEmployeeEndpointName))
                 {
                     await _next(context);
                 }

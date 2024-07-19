@@ -35,30 +35,37 @@ public class EmployeesService : IEmployeeService
 	}
 
 	public async Task<IEnumerable<EmployeeModel>> GetAllAsync(QueryModel? model)
-	{
-		var field = TakeFieldValue(model?.Field);
-		var sortOrder = TakeSortOrder(model?.Sort);
-		var(filter, value) = TakeFilterAndValue(field, model?.Filter, model?.Value);
+    {
+        var field = TakeFieldValue(model?.Field);
+        var sortOrder = TakeSortOrder(model?.Sort);
+        var (filter, value) = TakeFilterAndValue(field, model?.Filter, model?.Value);
 
-		var filterExpression = _expressionBuilderService.CreteFilterByExpression(filter, field, value);
+        var filterExpression = _expressionBuilderService.CreteFilterByExpression(filter, field, value);
 
-		var employees =  await _employeeRepository.GetAllEmployeesAsync(filterExpression, sortOrder, field);
+        var employees = await _employeeRepository.GetAllEmployeesAsync(filterExpression, sortOrder, field);
 
-		List<EmployeeModel> result = new();
+        var result = MapEmployeesResult(employees);
 
-		foreach (var employee in employees)
-		{
-			var employeeToAdd = new EmployeeModel
-			{
-				EmployeeId = employee.EmployeeId,
-				When = employee.When
-			};
+        return result;
+    }
 
-			result.Add(employeeToAdd);
-		}
+    private static List<EmployeeModel> MapEmployeesResult(IEnumerable<DataAcess.Entities.Employee> employees)
+    {
+        List<EmployeeModel> result = new();
 
-		return result;
-	}
+        foreach (var employee in employees)
+        {
+            var employeeToAdd = new EmployeeModel
+            {
+                EmployeeId = employee.EmployeeId,
+                When = employee.When
+            };
+
+            result.Add(employeeToAdd);
+        }
+
+        return result;
+    }
 
     private (Filter? filter, object? value) TakeFilterAndValue(Field? field, string? filter, string? value)
     {
